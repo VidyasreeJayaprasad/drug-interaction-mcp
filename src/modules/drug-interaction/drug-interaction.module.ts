@@ -23,13 +23,15 @@ import { OrchestratorTools } from './tools/orchestrator.tools.js';
 @Module({
   name: 'drug-interaction',
   description: 'Drug interaction checking — services, tools, resources, and prompts',
+  controllers: [
+    // Tools — add more as team members merge PRs
+    OrchestratorTools,
+  ],
   providers: [
     // Services (data layer) — stubs for now, team will replace
     OpenFdaService,
     PubmedService,
     ClinicalTrialsService,
-    // Tools — add more as team members merge PRs
-    OrchestratorTools,
   ],
   exports: [
     // Export services so they can be injected across tools

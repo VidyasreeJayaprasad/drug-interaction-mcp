@@ -147,15 +147,14 @@ Create `src/modules/drug-interaction/tools/orchestrator.tools.ts`. This tool cal
 
 ```typescript
 // src/modules/drug-interaction/tools/orchestrator.tools.ts
-import { Injectable } from '@nitrostack/core';
-import { ToolDecorator as Tool } from '@nitrostack/core';
+import { ControllerDecorator as Controller, ToolDecorator as Tool } from '@nitrostack/core';
 import { z } from 'zod';
 import { OpenFdaService } from '../services/openfda.service.js';
 import { PubmedService } from '../services/pubmed.service.js';
 import { ClinicalTrialsService } from '../services/clinical-trials.service.js';
 import { InteractionCheckOutput } from '../types/index.js';
 
-@Injectable()
+@Controller('orchestrator')
 export class OrchestratorTools {
   constructor(
     private readonly openFda: OpenFdaService,
