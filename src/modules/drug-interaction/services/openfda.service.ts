@@ -57,11 +57,11 @@ export class OpenFdaService {
     drug2: string
   ): Promise<FdaAdverseEvent[]> {
     try {
-      //hello
+      
       const search = `patient.drug.medicinalproduct:"${drug1}"+AND+patient.drug.medicinalproduct:"${drug2}"`;
       const url = `${this.BASE}/event.json?search=${encodeURIComponent(search)}&limit=5&sort=receivedate:desc`;
       const res = await fetch(url);
-      //const data: any = await res.json();
+      const data: any = await res.json();
       return (data.results || []).map((r: any) => ({
         source: 'OpenFDA Adverse Events' as const,
         drug_pair: [drug1, drug2],
