@@ -1,6 +1,6 @@
 // src/services/pubmed.service.ts
 import { Injectable } from '@nitrostack/core';
-import { PubmedResult } from '../types';
+import { PubmedResult } from '../types/index.js';
 
 @Injectable()
 export class PubmedService {

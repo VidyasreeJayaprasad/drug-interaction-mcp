@@ -1,6 +1,7 @@
 import {
   ControllerDecorator as Controller,
   ToolDecorator as Tool,
+  Injectable
 } from '@nitrostack/core';
 
 import { z } from 'zod';
@@ -8,6 +9,7 @@ import { z } from 'zod';
 import { ClinicalTrialsService } from '../services/clinical-trials.service.js';
 
 
+@Injectable()
 @Controller('clinical_trials')
 export class ClinicalTrialsTools {
 

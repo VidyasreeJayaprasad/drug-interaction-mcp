@@ -1,10 +1,11 @@
 // src/modules/drug-interaction/tools/drug-info.tools.ts
-import { ControllerDecorator as Controller, ToolDecorator as Tool } from '@nitrostack/core';
+import { ControllerDecorator as Controller, ToolDecorator as Tool, Injectable } from '@nitrostack/core';
 import { z } from 'zod';
 import { OpenFdaService } from '../services/openfda.service.js';
 import { PubmedService } from '../services/pubmed.service.js';
 import { DrugInfo } from '../types/index.js';
 
+@Injectable()
 @Controller('drug_info')
 export class DrugInfoTools {
   constructor(

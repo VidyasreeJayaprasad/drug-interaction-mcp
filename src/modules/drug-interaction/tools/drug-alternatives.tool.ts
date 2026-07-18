@@ -1,9 +1,10 @@
 // src/modules/drug-interaction/tools/drug-alternatives.tools.ts
-import { ControllerDecorator as Controller, ToolDecorator as Tool } from '@nitrostack/core';
+import { ControllerDecorator as Controller, ToolDecorator as Tool, Injectable } from '@nitrostack/core';
 import { z } from 'zod';
 import { OpenFdaService } from '../services/openfda.service.js';
 import { DrugAlternative } from '../types/index.js';
 
+@Injectable()
 @Controller('drug_alternatives')
 export class DrugAlternativesTools {
   constructor(private readonly openFda: OpenFdaService) {}

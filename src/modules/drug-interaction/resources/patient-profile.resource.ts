@@ -1,7 +1,8 @@
 
-import { ResourceDecorator as Resource } from '@nitrostack/core';
+import { ResourceDecorator as Resource, ControllerDecorator as Controller } from '@nitrostack/core';
 import { PatientContext } from '../types/index.js';
 
+@Controller('patient_profile_resource')
 export class PatientProfileResource {
 
 

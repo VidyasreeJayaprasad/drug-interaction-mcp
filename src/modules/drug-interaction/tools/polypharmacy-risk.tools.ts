@@ -1,6 +1,8 @@
 import {
   ControllerDecorator as Controller,
   ToolDecorator as Tool,
+  Widget,
+  Injectable
 } from '@nitrostack/core';
 
 import { z } from 'zod';
@@ -9,6 +11,7 @@ import { OpenFdaService } from '../services/openfda.service.js';
 import { PubmedService } from '../services/pubmed.service.js';
 import { PolypharmacyRiskOutput } from '../types/index.js';
 
+@Injectable()
 @Controller('polypharmacy_risk')
 export class PolypharmacyRiskTools {
   constructor(
@@ -25,6 +28,7 @@ export class PolypharmacyRiskTools {
       patient_medications: z.array(z.string()).min(2),
     }),
   })
+  @Widget('patient-profile')
   async checkPolypharmacyRisk(input: {
     patient_medications: string[];
   }): Promise<PolypharmacyRiskOutput> {

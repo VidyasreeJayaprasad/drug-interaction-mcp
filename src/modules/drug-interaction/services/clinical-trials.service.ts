@@ -1,140 +1,128 @@
 // src/modules/drug-interaction/services/clinical-trials.service.ts
-// STUB — Person 3 will replace this with the full implementation.
-// This stub exists so the project compiles while Person 3 works on the real service.
-
 import { Injectable } from '@nitrostack/core';
 import { ClinicalTrialResult } from '../types/index.js';
 
 @Injectable()
 export class ClinicalTrialsService {
 
-  private readonly BASE_URL =
-  'https://clinicaltrials.gov/api/query/study_fields';
+  private readonly BASE_URL = 'https://clinicaltrials.gov/api/v2/studies';
 
   async searchStudies(
     newDrug: string,
     currentMedications: string[]
   ): Promise<ClinicalTrialResult[]> {
-    // TODO: Person 3 — replace with real ClinicalTrials.gov API calls
-    const searchExpression =
-      `${newDrug} ${currentMedications.join(' ')}`;
-
+    const searchExpression = `${newDrug} ${currentMedications.join(' ')}`;
     console.log("Searching Clinical Trials for:", searchExpression);
     
-    const url =
-      `${this.BASE_URL}?expr=${encodeURIComponent(searchExpression)}&fields=NCTId,BriefTitle,OverallStatus,Condition,BriefSummary,StartDate,CompletionDate&min_rnk=1&max_rnk=5&fmt=json`;
+    // APIv2 Parameters
+    const params = new URLSearchParams({
+      'query.term': searchExpression,
+      'fields': 'NCTId,BriefTitle,OverallStatus,ConditionsModule,BriefSummary,StartDate,CompletionDate',
+      'pageSize': '5'
+    });
 
+    const url = `${this.BASE_URL}?${params.toString()}`;
     console.log("API URL:", url);
 
     try {
-
       const response = await fetch(url);
-
-       if (!response.ok) {
-         throw new Error(`HTTP Error: ${response.status}`);
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status}`);
       }
 
       const data: any = await response.json();
+      const studies = data.studies || [];
 
-      console.log("Clinical Trials Response:", data);
+      return studies.map((study: any) => {
+        const p = study.protocolSection || {};
+        const id = p.identificationModule || {};
+        const status = p.statusModule || {};
+        const desc = p.descriptionModule || {};
+        const cond = p.conditionsModule || {};
 
-const studies = data.StudyFieldsResponse?.StudyFields || [];
-
-return studies.map((study: any) => ({
-  source: 'ClinicalTrials.gov',
-  drugs: [newDrug, ...currentMedications],
-  nct_id: study.NCTId?.[0],
-  title: study.BriefTitle?.[0],
-  status: study.OverallStatus?.[0],
-  start_date: study.StartDate?.[0],
-  completion_date: study.CompletionDate?.[0],
-  summary: study.BriefSummary?.[0],
-  conditions: study.Condition || [],
-  url: study.NCTId?.[0]
-    ? `https://clinicaltrials.gov/study/${study.NCTId[0]}`
-    : undefined,
-}));
-
-      
-
+        return {
+          source: 'ClinicalTrials.gov',
+          drugs: [newDrug, ...currentMedications],
+          nct_id: id.nctId,
+          title: id.briefTitle,
+          status: status.overallStatus,
+          start_date: status.startDateStruct?.date,
+          completion_date: status.completionDateStruct?.date,
+          summary: desc.briefSummary,
+          conditions: cond.conditions || [],
+          url: id.nctId ? `https://clinicaltrials.gov/study/${id.nctId}` : undefined,
+        };
+      });
     } catch (error) {
-
       console.error("Clinical Trials API Error:", error);
-
       return [];
-
     }
   }
 
   async searchByTerms(
-  searchTerm: string,
-  filters?: {
-    status?: 'RECRUITING' | 'COMPLETED' | 'ACTIVE_NOT_RECRUITING';
-    condition?: string;
-    limit?: number;
-  }
-): Promise<ClinicalTrialResult[]> {
-
-  let expression = searchTerm;
-
-  if (filters?.condition) {
-    expression += ` AND ${filters.condition}`;
-  }
-
-  const limit = filters?.limit || 5;
-
-  const url =
-    `${this.BASE_URL}?expr=${encodeURIComponent(expression)}&fields=NCTId,BriefTitle,OverallStatus,Condition,BriefSummary,StartDate,CompletionDate&min_rnk=1&max_rnk=${limit}&fmt=json`;
-
-  try {
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`HTTP Error: ${response.status}`);
+    searchTerm: string,
+    filters?: {
+      status?: 'RECRUITING' | 'COMPLETED' | 'ACTIVE_NOT_RECRUITING';
+      condition?: string;
+      limit?: number;
     }
+  ): Promise<ClinicalTrialResult[]> {
 
-    const data: any = await response.json();
+    const params = new URLSearchParams();
+    
+    let term = searchTerm;
+    if (filters?.condition) {
+      params.append('query.cond', filters.condition);
+    }
+    params.append('query.term', term);
+    if (filters?.status) {
+      params.append('filter.overallStatus', filters.status);
+    }
+    
+    params.append('fields', 'NCTId,BriefTitle,OverallStatus,ConditionsModule,BriefSummary,StartDate,CompletionDate');
+    params.append('pageSize', (filters?.limit || 5).toString());
 
-    const studies = data.StudyFieldsResponse?.StudyFields || [];
+    const url = `${this.BASE_URL}?${params.toString()}`;
 
-    return studies
-      .filter((study: any) =>
-        !filters?.status ||
-        study.OverallStatus?.[0] === filters.status
-      )
-      .map((study: any) => ({
-        source: 'ClinicalTrials.gov',
-        drugs: [searchTerm],
-        nct_id: study.NCTId?.[0],
-        title: study.BriefTitle?.[0],
-        status: study.OverallStatus?.[0],
-        start_date: study.StartDate?.[0],
-        completion_date: study.CompletionDate?.[0],
-        summary: study.BriefSummary?.[0],
-        conditions: study.Condition || [],
-        url: study.NCTId?.[0]
-          ? `https://clinicaltrials.gov/study/${study.NCTId[0]}`
-          : undefined,
-      }));
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status}`);
+      }
 
-  } catch (error) {
+      const data: any = await response.json();
+      const studies = data.studies || [];
 
-    console.error("Clinical Trials API Error:", error);
+      return studies.map((study: any) => {
+        const p = study.protocolSection || {};
+        const id = p.identificationModule || {};
+        const status = p.statusModule || {};
+        const desc = p.descriptionModule || {};
+        const cond = p.conditionsModule || {};
 
-    return [];
-
+        return {
+          source: 'ClinicalTrials.gov',
+          drugs: [searchTerm],
+          nct_id: id.nctId,
+          title: id.briefTitle,
+          status: status.overallStatus,
+          start_date: status.startDateStruct?.date,
+          completion_date: status.completionDateStruct?.date,
+          summary: desc.briefSummary,
+          conditions: cond.conditions || [],
+          url: id.nctId ? `https://clinicaltrials.gov/study/${id.nctId}` : undefined,
+        };
+      });
+    } catch (error) {
+      console.error("Clinical Trials API Error:", error);
+      return [];
+    }
   }
-}
 
   async searchMedicationPair(
-  drug1: string,
-  drug2: string
-): Promise<ClinicalTrialResult[]> {
-
-  return this.searchStudies(drug1, [drug2]);
-
-}
-
-
+    drug1: string,
+    drug2: string
+  ): Promise<ClinicalTrialResult[]> {
+    return this.searchStudies(drug1, [drug2]);
+  }
 }

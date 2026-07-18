@@ -1,6 +1,6 @@
 // src/services/openfda.service.ts
 import { Injectable } from '@nitrostack/core';
-import { FdaAdverseEvent, FdaLabelResult } from '../types';
+import { FdaAdverseEvent, FdaLabelResult } from '../types/index.js';
 
 @Injectable()
 export class OpenFdaService {

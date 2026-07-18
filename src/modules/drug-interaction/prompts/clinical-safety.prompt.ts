@@ -1,6 +1,7 @@
 // src/modules/drug-interaction/prompts/clinical-safety.prompt.ts
-import { PromptDecorator as Prompt } from '@nitrostack/core';
+import { PromptDecorator as Prompt, ControllerDecorator as Controller, ExecutionContext } from '@nitrostack/core';
 
+@Controller('clinical_safety_prompts')
 export class ClinicalSafetyPrompts {
 
   @Prompt({
@@ -18,16 +19,14 @@ export class ClinicalSafetyPrompts {
     patient_medications: string;
     patient_age?: string;
     patient_conditions?: string;
-  }) {
+  }, ctx: ExecutionContext) {
     const medications = args.patient_medications.split(',').map(m => m.trim());
     const conditions = args.patient_conditions?.split(',').map(c => c.trim()) || [];
 
     return {
       messages: [{
-        role: 'user' as const,
-        content: {
-          type: 'text' as const,
-          text: `You are a clinical pharmacologist providing real-time decision support to a physician. You are NOT providing a diagnosis. You are NOT prescribing. You are surfacing evidence so the physician can make an informed decision.
+        role: 'user',
+        content: `You are a clinical pharmacologist providing real-time decision support to a physician. You are NOT providing a diagnosis. You are NOT prescribing. You are surfacing evidence so the physician can make an informed decision.
 
 A doctor wants to prescribe: ${args.new_drug}
 
@@ -71,7 +70,6 @@ STEP 4 — Synthesize and respond using this structure:
 
 ---
 *Clinical decision support tool. All prescribing decisions rest with the treating physician.*`,
-        },
       }],
     };
   }
@@ -83,15 +81,13 @@ STEP 4 — Synthesize and respond using this structure:
       { name: 'medications', description: 'Comma-separated list of all current medications to audit', required: true },
     ],
   })
-  async polypharmacyAudit(args: { medications: string }) {
+  async polypharmacyAudit(args: { medications: string }, ctx: ExecutionContext) {
     const meds = args.medications.split(',').map(m => m.trim());
     const pairCount = (meds.length * (meds.length - 1)) / 2;
     return {
       messages: [{
-        role: 'user' as const,
-        content: {
-          type: 'text' as const,
-          text: `You are performing a complete polypharmacy safety audit for a patient on ${meds.length} medications: ${meds.join(', ')}.
+        role: 'user',
+        content: `You are performing a complete polypharmacy safety audit for a patient on ${meds.length} medications: ${meds.join(', ')}.
 
 This will check ${pairCount} drug pair combinations.
 
@@ -120,7 +116,6 @@ STEP 3 — Synthesize findings:
 
 ---
 *This audit surfaces published evidence. Clinical judgment determines what action to take.*`,
-        },
       }],
     };
   }

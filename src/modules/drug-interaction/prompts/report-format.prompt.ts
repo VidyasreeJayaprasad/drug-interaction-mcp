@@ -1,5 +1,6 @@
-import { PromptDecorator as Prompt } from '@nitrostack/core';
+import { PromptDecorator as Prompt, ControllerDecorator as Controller, ExecutionContext } from '@nitrostack/core';
 
+@Controller('report_format_prompts')
 export class ReportFormatPrompts {
 
   @Prompt({
@@ -10,14 +11,12 @@ export class ReportFormatPrompts {
       { name: 'patient_medications', description: 'Comma-separated list of patient current medications', required: true },
     ],
   })
-  async interactionReport(args: { new_drug: string; patient_medications: string }) {
+  async interactionReport(args: { new_drug: string; patient_medications: string }, ctx: ExecutionContext) {
     const medications = args.patient_medications.split(',').map(m => m.trim());
     return {
       messages: [{
-        role: 'user' as const,
-        content: {
-          type: 'text' as const,
-          text: `Generate a structured clinical report for:
+        role: 'user',
+        content: `Generate a structured clinical report for:
 - Proposed drug: ${args.new_drug}
 - Patient's current medications: ${medications.join(', ')}
 
@@ -51,7 +50,6 @@ Format:
 ---
 *This report was generated using real-time data from FDA, PubMed, and ClinicalTrials.gov. It is a clinical decision support tool. All prescribing decisions are the responsibility of the treating physician.*
 ---`,
-        },
       }],
     };
   }
