@@ -8,10 +8,10 @@ import { ClinicalTrialsService } from './services/clinical-trials.service.js';
 
 // Tools
 import { OrchestratorTools } from './tools/orchestrator.tools.js';
-import { DrugInfoTools } from './tools/drug-info.tools.js';
-import { DrugAlternativesTools } from './tools/drug-alternatives.tools.js';
-import { ClinicalTrialsTools } from './tools/clinical-trials.tools.js';
-import { PolypharmacyRiskTools } from './tools/polypharmacy-risk.tools.js';
+// import { DrugInfoTools } from './tools/drug-info.tools.js';
+// import { DrugAlternativesTools } from './tools/drug-alternatives.tools.js';
+// import { ClinicalTrialsTools } from './tools/clinical-trials.tools.js';
+// import { PolypharmacyRiskTools } from './tools/polypharmacy-risk.tools.js';
 
 @Module({
   name: 'drug-interaction',
@@ -19,10 +19,10 @@ import { PolypharmacyRiskTools } from './tools/polypharmacy-risk.tools.js';
 
   controllers: [
     OrchestratorTools,
-    DrugInfoTools,
-    DrugAlternativesTools,
-    ClinicalTrialsTools,
-    PolypharmacyRiskTools,
+    // DrugInfoTools,
+    // DrugAlternativesTools,
+    // ClinicalTrialsTools,
+    // PolypharmacyRiskTools,
   ],
 
   providers: [
