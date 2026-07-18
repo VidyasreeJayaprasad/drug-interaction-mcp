@@ -1,9 +1,7 @@
 
-import { Injectable } from '@nitrostack/core';
 import { ResourceDecorator as Resource } from '@nitrostack/core';
 import { PatientContext } from '../types/index.js';
 
-@Injectable()
 export class PatientProfileResource {
 
 

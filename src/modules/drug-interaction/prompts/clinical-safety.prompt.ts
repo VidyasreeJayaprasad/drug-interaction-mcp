@@ -1,8 +1,6 @@
 // src/modules/drug-interaction/prompts/clinical-safety.prompt.ts
-import { Injectable } from '@nitrostack/core';
 import { PromptDecorator as Prompt } from '@nitrostack/core';
 
-@Injectable()
 export class ClinicalSafetyPrompts {
 
   @Prompt({

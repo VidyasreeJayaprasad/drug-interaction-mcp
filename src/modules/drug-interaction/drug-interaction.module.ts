@@ -13,16 +13,29 @@ import { DrugAlternativesTools } from './tools/drug-alternatives.tool.js';
 import { ClinicalTrialsTools } from './tools/clinical-trials.tools.js';
 import { PolypharmacyRiskTools } from './tools/polypharmacy-risk.tools.js';
 
+// Resources (Person 4)
+import { PatientProfileResource } from './resources/patient-profile.resource.js';
+
+// Prompts (Person 4)
+import { ClinicalSafetyPrompts } from './prompts/clinical-safety.prompt.js';
+import { ReportFormatPrompts } from './prompts/report-format.prompt.js';
+
 @Module({
   name: 'drug-interaction',
   description: 'Drug interaction checking — services, tools, resources, and prompts',
 
   controllers: [
+    // Tools
     OrchestratorTools,
     DrugInfoTools,
     DrugAlternativesTools,
     ClinicalTrialsTools,
     PolypharmacyRiskTools,
+    // Resources
+    PatientProfileResource,
+    // Prompts
+    ClinicalSafetyPrompts,
+    ReportFormatPrompts,
   ],
 
   providers: [

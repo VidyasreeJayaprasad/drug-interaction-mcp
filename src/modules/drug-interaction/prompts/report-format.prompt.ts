@@ -1,7 +1,5 @@
-import { Injectable } from '@nitrostack/core';
 import { PromptDecorator as Prompt } from '@nitrostack/core';
 
-@Injectable()
 export class ReportFormatPrompts {
 
   @Prompt({
