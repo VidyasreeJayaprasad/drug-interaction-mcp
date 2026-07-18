@@ -11,7 +11,9 @@ import { OpenFdaService } from '../services/openfda.service.js';
 import { PubmedService } from '../services/pubmed.service.js';
 import { PolypharmacyRiskOutput } from '../types/index.js';
 
-@Injectable()
+@Injectable({
+  deps: [OpenFdaService, PubmedService]
+})
 @Controller('polypharmacy_risk')
 export class PolypharmacyRiskTools {
   constructor(

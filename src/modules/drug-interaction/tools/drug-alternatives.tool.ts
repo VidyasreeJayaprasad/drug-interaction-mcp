@@ -4,7 +4,9 @@ import { z } from 'zod';
 import { OpenFdaService } from '../services/openfda.service.js';
 import { DrugAlternative } from '../types/index.js';
 
-@Injectable()
+@Injectable({
+  deps: [OpenFdaService]
+})
 @Controller('drug_alternatives')
 export class DrugAlternativesTools {
   constructor(private readonly openFda: OpenFdaService) {}

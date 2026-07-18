@@ -6,7 +6,9 @@ import { PubmedService } from '../services/pubmed.service.js';
 import { ClinicalTrialsService } from '../services/clinical-trials.service.js';
 import { InteractionCheckOutput } from '../types/index.js';
 
-@Injectable()
+@Injectable({
+  deps: [OpenFdaService, PubmedService, ClinicalTrialsService]
+})
 @Controller('orchestrator')
 export class OrchestratorTools {
   constructor(

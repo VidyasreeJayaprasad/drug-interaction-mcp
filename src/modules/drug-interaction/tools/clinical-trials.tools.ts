@@ -9,7 +9,9 @@ import { z } from 'zod';
 import { ClinicalTrialsService } from '../services/clinical-trials.service.js';
 
 
-@Injectable()
+@Injectable({
+  deps: [ClinicalTrialsService]
+})
 @Controller('clinical_trials')
 export class ClinicalTrialsTools {
 
