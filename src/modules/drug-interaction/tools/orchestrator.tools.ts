@@ -12,7 +12,7 @@ export class OrchestratorTools {
     private readonly openFda: OpenFdaService,
     private readonly pubmed: PubmedService,
     private readonly clinicalTrials: ClinicalTrialsService,
-  ) { }
+  ) {}
 
   @Tool({
     name: 'check_drug_interactions',
