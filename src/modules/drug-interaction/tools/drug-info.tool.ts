@@ -1,4 +1,3 @@
-// src/modules/drug-interaction/tools/drug-info.tools.ts
 import { ControllerDecorator as Controller, ToolDecorator as Tool, Injectable } from '@nitrostack/core';
 import { z } from 'zod';
 import { OpenFdaService } from '../services/openfda.service.js';
@@ -17,7 +16,7 @@ export class DrugInfoTools {
     name: 'get_drug_info',
     description: `Get comprehensive pharmacological information about any drug — drug class, enzyme pathways it inhibits or induces (CYP2C9, CYP3A4, etc.), brand names, generic name, primary use, and which other drug classes it commonly interacts with.
     ALWAYS call this tool first before calling check_drug_interactions.
-    Understanding the mechanism (e.g. strong CYP2C9 inhibitor) tells you which patient medications to be most concerned about.`,
+    Understanding the mechanism (e.g. strong CYP2C9 inhibitor) tells you which patient medications to be most concern about.`,
     inputSchema: z.object({
       drug_name: z.string().describe('Drug name — generic or brand name accepted'),
     }),
